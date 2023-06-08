@@ -1,6 +1,6 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 
 const Login = () => {
@@ -22,16 +22,25 @@ const Login = () => {
   };
   return (
     <Layout>
-      <Box sx={{ display: "flex", flexDirection: "column", mt: 5 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: 500,
+          m: "0 auto",
+          mt: 5,
+        }}
+      >
         <TextField
           id="outlined-basic"
           label="Email"
           variant="outlined"
-          sx={{ my: 4 }}
+          sx={{ minWidth: "300px" }}
           onChange={(evt) => setUser({ ...user, email: evt.target.value })}
         />
         <TextField
           id="outlined-basic"
+          sx={{ minWidth: "300px", my: 2 }}
           label="Password"
           variant="outlined"
           type="password"
@@ -40,6 +49,17 @@ const Login = () => {
         <Button sx={{ mt: 4 }} onClick={login} variant="contained">
           Login
         </Button>
+        <Link
+          to={"/register"}
+          style={{
+            marginTop: "20px",
+            textAlign: "center",
+            fontStyle: "italic",
+          }}
+        >
+          {" "}
+          <Typography variant="body1">New User ? Register Here</Typography>
+        </Link>
       </Box>
     </Layout>
   );

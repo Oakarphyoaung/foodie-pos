@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
+import React, { useEffect } from "react";
+
 import "./App.css";
-import NavBar from "./components/NavBar";
-import Register from "./components/Register";
+
 import { Box, Typography } from "@mui/material";
 import Layout from "./components/Layout";
+import { Navigate } from "react-router-dom";
 
 function App() {
   const accessToken = localStorage.getItem("accessToken");
-  console.log("accessToken:P", accessToken);
+  console.log("accessToken:", accessToken);
 
   useEffect(() => {
     fetchData();
   }, []);
   const fetchData = async () => {
-    const response = await fetch("http://localhost:5000/menus");
-    console.log(await response.json());
+    const response = await fetch("http://localhost:5000/menus", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if (!accessToken) return <Navigate to={"/login"} />;
   };
   return (
     <Layout>

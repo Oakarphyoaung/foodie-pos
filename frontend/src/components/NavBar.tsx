@@ -27,6 +27,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const sidebarMenuItems = [
   { id: 1, label: "Orders", icon: <LocalMallIcon />, route: "/orders" },
@@ -54,10 +55,11 @@ const sidebarMenuItems = [
 ];
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const accessToken = localStorage.getItem("accessToken");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
   };
@@ -79,23 +81,35 @@ const NavBar = () => {
     >
       <List>
         {sidebarMenuItems.slice(0, 6).map((icon) => (
-          <ListItem key={icon.id} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{icon.icon}</ListItemIcon>
-              <ListItemText primary={icon.label} />
-            </ListItemButton>
-          </ListItem>
+          <Link
+            to={icon.route}
+            key={icon.id}
+            style={{ textDecoration: "none", color: "#313131" }}
+          >
+            <ListItem key={icon.id} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>{icon.icon}</ListItemIcon>
+                <ListItemText primary={icon.label} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
       <Divider />
       <List>
         {sidebarMenuItems.slice(-1).map((icon) => (
-          <ListItem key={icon.id} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{icon.icon}</ListItemIcon>
-              <ListItemText primary={icon.label} />
-            </ListItemButton>
-          </ListItem>
+          <Link
+            to={icon.route}
+            key={icon.id}
+            style={{ textDecoration: "none", color: "#313131" }}
+          >
+            <ListItem key={icon.id} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>{icon.icon}</ListItemIcon>
+                <ListItemText primary={icon.label} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
     </Box>
@@ -104,7 +118,7 @@ const NavBar = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             onClick={() => setOpen(true)}
             size="large"
@@ -115,40 +129,33 @@ const NavBar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Photos
+          <Typography variant="h6" component="div">
+            Foodie POS
           </Typography>
-          {auth && (
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
+
+          {accessToken ? (
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ cursor: "pointer", userSelect: "none" }}
+              onClick={() => {
+                localStorage.removeItem("accessToken");
+                navigate("/logout");
+              }}
+            >
+              Log out
+            </Typography>
+          ) : (
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ cursor: "pointer", userSelect: "none" }}
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              {window.location.pathname === "/login" ? "" : "Login"}
+            </Typography>
           )}
         </Toolbar>
       </AppBar>
