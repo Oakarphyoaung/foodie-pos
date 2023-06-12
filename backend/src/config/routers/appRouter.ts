@@ -24,7 +24,6 @@ appRouter.get("/", checkAuth, async (req: Request, res: Response) => {
       "select * from locations where companies_id = $1",
       [companyId]
     );
-    console.log("locations", locations);
 
     const locationIds = locations.rows.map((row) => row.id);
     const menuLocations = await db.query(

@@ -10,8 +10,9 @@ import jwt from "jsonwebtoken";
 import { config } from "./src/config/config";
 import { checkAuth } from "./src/config/utils/auth";
 import authRouter from "./src/config/routers/authRouter";
-import menusRouter from "./src/config/routers/menusRouter";
+import menusRouter from "./src/config/routers/locationsRouter";
 import appRouter from "./src/config/routers/appRouter";
+import locationsRouter from "./src/config/routers/locationsRouter";
 
 const app = express();
 const port = 5000;
@@ -21,6 +22,7 @@ app.use(json());
 app.use("/", appRouter);
 app.use("/auth", authRouter);
 app.use("/menus", menusRouter);
+app.use("/locations", locationsRouter);
 
 // app.get("/menus", checkAuth, async (req: Request, res: Response) => {
 //   const menusResult = await db.query("select * from menus");

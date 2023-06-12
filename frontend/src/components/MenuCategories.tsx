@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import NavBar from "./NavBar";
 import { AppContext } from "../contexts/AppContext";
+import Layout from "./Layout";
 
 const MenuCategories = () => {
   const contextData = useContext(AppContext);
   const { updateData, ...data } = contextData;
 
   const accessToken = localStorage.getItem("accessToken");
-  console.log("accessToken:", accessToken);
 
   useEffect(() => {
     fetchData();
@@ -20,14 +20,14 @@ const MenuCategories = () => {
     });
     const menusFromServer = await response.json();
     updateData({ ...data, menuCategories: menusFromServer });
-    console.log("contextData", contextData);
   };
 
   return (
-    <div>
-      <NavBar />
-      <h1>MenuCategories Page</h1>
-    </div>
+    <Layout title="MenuCategories">
+      <div>
+        <h1>Menu Categories Page</h1>
+      </div>
+    </Layout>
   );
 };
 

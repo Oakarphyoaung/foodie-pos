@@ -1,12 +1,10 @@
-import React from "react";
-import NavBar from "./NavBar";
+import Layout from "./Layout";
 
 const Addons = () => {
   return (
-    <div>
-      <NavBar />
-      <h1>Addons Page</h1>
-    </div>
+    <Layout title="Addons">
+      <h1>Addons</h1>
+    </Layout>
   );
 };
 

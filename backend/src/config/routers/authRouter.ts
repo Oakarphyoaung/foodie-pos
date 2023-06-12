@@ -30,6 +30,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
 
 authRouter.post("/register", async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+
   const isValid =
     name &&
     name.length > 0 &&
@@ -42,18 +43,23 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     const result = await db.query("select * from users where email=$1", [
       email,
     ]);
+
     if (result.rows.length)
       return res.send({ message: "User already exists." });
     const companiesResult = await db.query(
       "insert into companies (name) values($1) returning *",
-      ["Default companies"]
+      ["Default company"]
     );
+
     const companyId = companiesResult.rows[0].id;
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await db.query(
       "insert into users (name, email, password, companies_id) values($1, $2, $3, $4) RETURNING *",
       [name, email, hashedPassword, companyId]
     );
+
     const locationResult = await db.query(
       "insert into locations (name, address, companies_id) values($1, $2, $3) returning *",
       ["Default location", "Default addresss", companyId]
@@ -76,25 +82,31 @@ authRouter.post("/register", async (req: Request, res: Response) => {
         [locationId, locationId],
       ]
     );
+
     const menuCategoriesResult = await db.query(
       "insert into menu_categories (name) values ('defaultMenuCategory1'),('defaultMenuCategory2') returning *"
     );
+
     const defaultMenuCategories = menuCategoriesResult.rows;
     const defaultMenuCategoryId1 = defaultMenuCategories[0].id;
     const defaultMenuCategoryId2 = defaultMenuCategories[1].id;
     await db.query(
       `insert into menus_menu_categories (menus_id, menu_categories_id) values(${defaultMenuId1}, ${defaultMenuCategoryId1}), (${defaultMenuId2}, ${defaultMenuCategoryId2})`
     );
+
     const defaultAddonCategoriesResult = await db.query(
-      "insert into addon_categories (name) values ('Drinks'), ('Sizes') returning *"
+      "insert into addon_categories (name, is_required) values ('Drinks', false), ('Sizes', false) returning *"
     );
+
     const defaultAddonCategoryId1 = defaultAddonCategoriesResult.rows[0].id;
     const defaultAddonCategoryId2 = defaultAddonCategoriesResult.rows[1].id;
     await db.query(
       `insert into menus_addon_categories (menus_id, addon_categories_id) values (${defaultMenuId1}, ${defaultAddonCategoryId1}), (${defaultMenuId2}, ${defaultAddonCategoryId2})`
     );
-    await db.query(`insert into addons (name, price, addon_categories_id) values ('Cola', 50, ${defaultAddonCategoryId1}), ('Pepsi', 50, ${defaultAddonCategoryId1}), 
+
+    await db.query(`insert into addon (name, price, addon_categories_id) values ('Cola', 50, ${defaultAddonCategoryId1}), ('Pepsi', 50, ${defaultAddonCategoryId1}), 
       ('Large', 30, ${defaultAddonCategoryId2}), ('Normal', 0, ${defaultAddonCategoryId2})`);
+
     res.send(newUser.rows);
   } catch (err) {
     res.sendStatus(500);

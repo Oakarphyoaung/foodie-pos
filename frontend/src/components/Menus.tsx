@@ -1,33 +1,51 @@
-import React, { useContext, useEffect } from "react";
-import NavBar from "./NavBar";
+import { useContext, useEffect } from "react";
+import Layout from "./Layout";
 import { AppContext } from "../contexts/AppContext";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Menus = () => {
-  const contextData = useContext(AppContext);
-  const { updateData, ...data } = contextData;
+  const { menus } = useContext(AppContext);
 
-  const accessToken = localStorage.getItem("accessToken");
-  console.log("accessToken:", accessToken);
+  const sampleMenuImageUrl =
+    "https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/Spicy%20seasoned%20seafood%20noodles.png";
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-  const fetchData = async () => {
-    const response = await fetch("http://localhost:5000/menus", {
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    const menusFromServer = await response.json();
-    updateData({ ...data, menu: menusFromServer });
-    console.log("contextData", contextData);
-  };
   return (
-    <div>
-      <NavBar />
-      <h1>Menus page</h1>
-    </div>
+    <Layout title="Menus">
+      <Box sx={{ ml: 3, mt: 5, display: "flex" }}>
+        {menus.map((menu) => {
+          return (
+            <Card sx={{ maxWidth: 345, mr: 5 }} key={menu.id}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={sampleMenuImageUrl}
+                  alt="green iguana"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {menu.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever since the 1500s
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          );
+        })}
+      </Box>
+    </Layout>
   );
 };
 
