@@ -1,6 +1,7 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Layout from "./Layout";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [user, setUser] = useState({ name: "", email: "", password: "" });
@@ -18,7 +19,7 @@ const Register = () => {
       <Box sx={{ display: "flex", flexDirection: "column", mt: 5 }}>
         <TextField
           id="outlined-basic"
-          label="name"
+          label="Name"
           variant="outlined"
           sx={{ minWidth: 300 }}
           onChange={(evt) => setUser({ ...user, name: evt.target.value })}
@@ -37,9 +38,22 @@ const Register = () => {
           type="password"
           onChange={(evt) => setUser({ ...user, password: evt.target.value })}
         />
-        <Button sx={{ mt: 4 }} onClick={register} variant="contained">
+        <Button sx={{ mt: 4 }} variant="contained" onClick={register}>
           Register
         </Button>
+        <Link
+          to={"/Login"}
+          style={{
+            marginTop: "20px",
+            textAlign: "center",
+            fontStyle: "italic",
+          }}
+        >
+          {" "}
+          <Typography variant="body1">
+            Already registered? Login here
+          </Typography>
+        </Link>
       </Box>
     </Layout>
   );
