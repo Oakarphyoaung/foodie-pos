@@ -10,9 +10,6 @@ locationsRouter.put("/", checkAuth, async (req: Request, res: Response) => {
 
 locationsRouter.post("/", checkAuth, async (req: Request, res: Response) => {
   const { name, address, companyId } = req.body;
-  console.log("namer", name);
-  console.log("addressr", address);
-  console.log("companyIdr", companyId);
 
   const isValid = name && address && companyId;
 
@@ -22,6 +19,18 @@ locationsRouter.post("/", checkAuth, async (req: Request, res: Response) => {
     [name, address, companyId]
   );
   res.send(200);
+});
+
+locationsRouter.put("/", checkAuth, async (req: Request, res: Response) => {
+  const { id, name, address } = req.body;
+  const isValid = name & address;
+  if (isValid) return res.send(400);
+  await db.query("UPDATE locations SET name =$1,address = $2,where id = $3", [
+    name,
+    address,
+    id,
+  ]);
+  res.send({ message: "Updated" });
 });
 
 export default locationsRouter;
